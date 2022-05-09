@@ -27,6 +27,17 @@ for i in titles:
     title.append(i.get_text())
 
 
-#content > div.article > div:nth-child(1)
-#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(1) > dl > dt
+# 등급 추출
+a=soup.select_one('#content > div.article > div:nth-child(1) ')
+scopes = a.select('li > dl > dt > span')
+for i in scopes:
+    if i =='null':
+        scope.append("")
+    scope.append(i.get_text())
 
+print(len(title))
+print(len(scope))
+
+
+#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(1) > dl > dt > a
+#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(1) > dl > dt > span
