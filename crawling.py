@@ -1,17 +1,17 @@
 import requests
 from bs4 import BeautifulSoup
 
-title = [ ] # 영화 제목 리스트
-movie_rate = [ ] # 영화 등급 
-netizen_rate = [ ] # 네티즌 평점
-netizen_count = [ ] # 네티즌 평점 참여자 수
-journalist_score = [ ] # 기자평론가 평점
-journalist_count = [ ] # 기자평론가 참여자수
-scope = [ ] # 개요
-playing_time = [ ] # 상영시간
-opening_date = [ ] # 개봉날짜
-director = [ ] # 감독
-image = [ ] # 영화 대표 이미지 주소
+title = [ ] # 영화 제목 리스트 : o
+movie_rate = [ ] # 영화 등급 : o
+netizen_rate = [ ] # 네티즌 평점 : o
+netizen_count = [ ] # 네티즌 평점 참여자 수 : o
+journalist_score = [ ] # 기자평론가 평점 : o
+journalist_count = [ ] # 기자평론가 참여자수 : o
+scope = [ ] # 개요 : 
+playing_time = [ ] # 상영시간 :
+opening_date = [ ] # 개봉날짜 :
+director = [ ] # 감독 :
+image = [ ] # 영화 대표 이미지 주소 :
 
 
 url = 'https://movie.naver.com/movie/running/current.naver'
@@ -53,7 +53,7 @@ for i in range(0,len(scope)):
     else:
         scope[i]='정보 없음'                
 
-# 네티즌 평점 - 순서 오류
+# 네티즌 평점 
 
 #content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(29) > dl > dd.star > dl > dd:nth-child(2) > div > a > span.num
 #content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(30) > dl > dd.star > dl > dd:nth-child(2) > div > a > span.num
@@ -66,7 +66,7 @@ for i in net:
 
 
 
-# 네티즌 평점 참여자 수 - 순서 오류
+# 네티즌 평점 참여자 수 
 
 netnum=soup.select_one('#content > div.article > div:nth-child(1)')
 netnum=netnum.select('li > dl > dd.star > dl > dd:nth-child(2) > div > a > span.num2 > em')
@@ -77,7 +77,7 @@ for i in netnum:
 
 
 
-# 기자 평론가 평점 - 순서 오류
+# 기자 평론가 평점
 jr = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul')
 jr = jr.select('li > dl > dd.star > dl ' )
 
@@ -104,9 +104,43 @@ for i in jrnum:
         journalist_count.append("정보 없음")
     else:
         journalist_count.append(s.get_text())   
-print(journalist_count)         
+ 
 
 
 
 #content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(1) > dl > dd.star > dl > dd:nth-child(4) > div > a > span.num2 > em
 #content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(2) > dl > dd.star > dl > dd:nth-child(4) > div > a > span.num2 > em
+
+
+# 개요 - 작업 중 : 중복 값 문제
+geyo = soup.select_one("#content > div.article > div:nth-child(1) > div.lst_wrap > ul")
+geyo = geyo.select('li > dl > dd:nth-child(3) > dl > dd:nth-child(2) > span.link_txt > a')
+for i in geyo:
+    scope.append(i)
+#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(1) > dl > dd:nth-child(3) > dl > dd:nth-child(2) > span.link_txt
+#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(3) > dl > dd:nth-child(3) > dl > dd:nth-child(2) > span.link_txt > a
+
+
+
+
+# 감독 - 작업 중 : 중복 값 문제
+dir = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul')
+dir = dir.select('li > dl > dd:nth-child(3) > dl > dd:nth-child(4) > span > a')
+for i in dir:
+    director.append(i)
+
+
+#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(1) > dl > dd:nth-child(3) > dl > dd:nth-child(4) > span > a
+#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(2) > dl > dd:nth-child(3) > dl > dd:nth-child(4) > span > a
+
+
+# 영화 대표 이미지 주소 
+img = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul ')
+img = img.select('li > div > a ')
+for i in img:
+    image.append(i.get_text())
+    
+
+print(len(image))
+#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(3) > div > a > 
+#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(4) > div > a > img
