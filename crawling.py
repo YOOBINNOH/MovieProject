@@ -9,7 +9,7 @@ netizen_count = [ ] # 네티즌 평점 참여자 수 : o
 journalist_score = [ ] # 기자평론가 평점 : o
 journalist_count = [ ] # 기자평론가 참여자수 : o
 scope = [ ] # 개요 : o
-playing_time = [ ] # 상영시간 :
+playing_time = [ ] # 상영시간 : o
 opening_date = [ ] # 개봉날짜 :
 director = [ ] # 감독 : o
 image = [ ] # 영화 대표 이미지 주소 : o
@@ -166,6 +166,22 @@ for i in range(0,len(time)):
             playing_time.append("".join((time[i-2:i+1])))    
 
 print("상영 시간의 수 : ", len(playing_time))
+
+
+# 개봉 날짜 
+date = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul ')
+date = list(date.get_text())
+
+for i in range(0,len(date)-1):
+    if date[i]=="개" and date[i+1]=="봉":
+        opening_date.append("".join(date[i-11:i]))
+
+
+
+print("개봉 날짜 수 : ", len(opening_date))
+
+
+
 
 # 감독 
 dir = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul')
