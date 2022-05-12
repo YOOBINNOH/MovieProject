@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import re
 
 title = [ ] # 영화 제목 리스트 : o
 movie_rate = [ ] # 영화 등급 : o
@@ -11,7 +12,7 @@ scope = [ ] # 개요 : o
 playing_time = [ ] # 상영시간 :
 opening_date = [ ] # 개봉날짜 :
 director = [ ] # 감독 : o
-image = [ ] # 영화 대표 이미지 주소 :
+image = [ ] # 영화 대표 이미지 주소 : o
 
 
 url = 'https://movie.naver.com/movie/running/current.naver'
@@ -135,7 +136,7 @@ print("기자 평론가 참여자 수 : ",len(journalist_count))
 
 
 
-# 개요 - 작업 중 
+# 개요 
 geyo = soup.select_one("#content > div.article > div:nth-child(1) > div.lst_wrap > ul")
 geyo = geyo.select('li > dl > dd:nth-child(3) > dl > dd:nth-child(2) > span.link_txt ')
 
@@ -149,7 +150,24 @@ print('개요 수 : ', len(scope))
 
 
 
-# 감독 - 작업 중 
+
+# 상영 시간 : 진행 중
+
+ten = {'0','1','2','3','4','5','6','7','8','9'}
+
+time = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul ')
+time = list(time.get_text())
+
+for i in range(0,len(time)):
+    if time[i]=="분":
+        if time[i-3] in ten:
+            playing_time.append("".join((time[i-3:i+1])))
+        else:
+            playing_time.append("".join((time[i-2:i+1])))    
+
+print("상영 시간의 수 : ", len(playing_time))
+
+# 감독 
 dir = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul')
 dir = dir.select('li > dl > dd:nth-child(3) > dl > dd:nth-child(4) > span ')
 st = ""
