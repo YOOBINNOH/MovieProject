@@ -7,10 +7,10 @@ netizen_rate = [ ] # 네티즌 평점 : o
 netizen_count = [ ] # 네티즌 평점 참여자 수 : o
 journalist_score = [ ] # 기자평론가 평점 : o
 journalist_count = [ ] # 기자평론가 참여자수 : o
-scope = [ ] # 개요 : 
+scope = [ ] # 개요 : o
 playing_time = [ ] # 상영시간 :
 opening_date = [ ] # 개봉날짜 :
-director = [ ] # 감독 :
+director = [ ] # 감독 : o
 image = [ ] # 영화 대표 이미지 주소 :
 
 
@@ -135,7 +135,7 @@ print("기자 평론가 참여자 수 : ",len(journalist_count))
 
 
 
-# 개요 - 작업 중 : 중복 값 문제
+# 개요 - 작업 중 
 geyo = soup.select_one("#content > div.article > div:nth-child(1) > div.lst_wrap > ul")
 geyo = geyo.select('li > dl > dd:nth-child(3) > dl > dd:nth-child(2) > span.link_txt ')
 
@@ -149,7 +149,7 @@ print('개요 수 : ', len(scope))
 
 
 
-# 감독 - 작업 중 : 중복 값 문제
+# 감독 - 작업 중 
 dir = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul')
 dir = dir.select('li > dl > dd:nth-child(3) > dl > dd:nth-child(4) > span ')
 st = ""
@@ -161,16 +161,13 @@ for i in dir:
 
 print("감독 수 : ",(len(director)))
 
-#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(1) > dl > dd:nth-child(3) > dl > dd:nth-child(4) > span > a
-#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(2) > dl > dd:nth-child(3) > dl > dd:nth-child(4) > span > a
 
-
-# 영화 대표 이미지 주소 : 119개 값 나옴
+# 영화 대표 이미지 주소 
 img = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul ')
-img = img.select('li > div  ')
+img = img.select('li > div > a')
 for i in img:
-    image.append(i.get_text())
-    
+    q = (i.img)
+    k = q.get('src')
+    image.append(k)
 
-#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(3) > div > a > 
-#content > div.article > div:nth-child(1) > div.lst_wrap > ul > li:nth-child(4) > div > a > img
+print("영화 이미지 수 : ",len(image))
