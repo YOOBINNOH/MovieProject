@@ -1,6 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import pymysql
+
+
 
 title = [ ] # 영화 제목 리스트 : o
 movie_rate = [ ] # 영화 등급 : o
@@ -10,7 +13,7 @@ journalist_score = [ ] # 기자평론가 평점 : o
 journalist_count = [ ] # 기자평론가 참여자수 : o
 scope = [ ] # 개요 : o
 playing_time = [ ] # 상영시간 : o
-opening_date = [ ] # 개봉날짜 :
+opening_date = [ ] # 개봉날짜 :o
 director = [ ] # 감독 : o
 image = [ ] # 영화 대표 이미지 주소 : o
 
@@ -27,6 +30,7 @@ soup = BeautifulSoup(html, 'html.parser')
 
 
 # 제목 추출
+
 k=soup.select_one('#content > div.article > div:nth-child(1) ')
 titles = k.select('li > dl > dt > a')
 for i in titles:
@@ -39,7 +43,8 @@ print("제목 수 : ", len(title))
 
 
 
-# 등급 추출 후 출력 값 변경해서 리스트에 넣기
+# 등급 추출 
+
 a=soup.select_one('#content > div.article > div:nth-child(1) ')
 scopes = a.select('li > dl > dt')
 
@@ -57,7 +62,7 @@ for i in range(0,len(scope)):
     elif movie_rate[i][2]=='체':
         movie_rate[i]='전체 관람가'
     else:
-        movie_rate[i]='정보 없음'                
+        movie_rate[i]='Null'                
 print("등급 수 : ",len(movie_rate))
 
 
@@ -68,14 +73,14 @@ print("등급 수 : ",len(movie_rate))
 
 # 네티즌 평점 
 
-
 net=soup.select_one('#content > div.article > div:nth-child(1) ')
 net=net.select('li > dl > dd.star > dl > dd:nth-child(2) > div > a >span.num')
 
 for i in net:
     netizen_rate.append(float(i.get_text()))
-
+ 
 print("네트즌 평점 수 : ", len(netizen_rate))
+
 
 
 
@@ -99,7 +104,9 @@ print("네트즌 평점 참여자 수 : ", len(netizen_count))
 
 
 
+
 # 기자 평론가 평점
+
 jr = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul')
 jr = jr.select('li > dl > dd.star > dl ' )
 
@@ -107,7 +114,7 @@ jr = jr.select('li > dl > dd.star > dl ' )
 for i in jr:
     s = i.select_one('dd:nth-child(4) > div > a > span.num')
     if s is None:
-        journalist_score.append("정보 없음")
+        journalist_score.append("Null")
     else:
         journalist_score.append(float(s.get_text()))
 print("기자 평론가 평점 수 : ",len(journalist_score))    
@@ -119,13 +126,16 @@ print("기자 평론가 평점 수 : ",len(journalist_score))
 
 
 
+
+
 # 기자 평론가 참여자 수 
+
 jrnum = soup.select_one("#content > div.article > div:nth-child(1) > div.lst_wrap > ul ")
 jrnum = jrnum.select('li > dl > dd.star > dl')
 for i in jrnum:
     s = i.select_one('dd:nth-child(4) > div > a > span.num2 > em')
     if s is None:
-        journalist_count.append("정보 없음")
+        journalist_count.append("Null")
     else:
         journalist_count.append(s.get_text())   
  
@@ -136,7 +146,10 @@ print("기자 평론가 참여자 수 : ",len(journalist_count))
 
 
 
+
+
 # 개요 
+
 geyo = soup.select_one("#content > div.article > div:nth-child(1) > div.lst_wrap > ul")
 geyo = geyo.select('li > dl > dd:nth-child(3) > dl > dd:nth-child(2) > span.link_txt ')
 
@@ -151,7 +164,12 @@ print('개요 수 : ', len(scope))
 
 
 
-# 상영 시간 : 진행 중
+
+
+
+
+
+# 상영 시간 
 
 ten = {'0','1','2','3','4','5','6','7','8','9'}
 
@@ -168,7 +186,16 @@ for i in range(0,len(time)):
 print("상영 시간의 수 : ", len(playing_time))
 
 
+
+
+
+
+
+
+
+
 # 개봉 날짜 
+
 date = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul ')
 date = list(date.get_text())
 
@@ -183,7 +210,14 @@ print("개봉 날짜 수 : ", len(opening_date))
 
 
 
+
+
+
+
+
+
 # 감독 
+
 dir = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul')
 dir = dir.select('li > dl > dd:nth-child(3) > dl > dd:nth-child(4) > span ')
 st = ""
@@ -196,7 +230,16 @@ for i in dir:
 print("감독 수 : ",(len(director)))
 
 
+
+
+
+
+
+
+
+
 # 영화 대표 이미지 주소 
+
 img = soup.select_one('#content > div.article > div:nth-child(1) > div.lst_wrap > ul ')
 img = img.select('li > div > a')
 for i in img:
@@ -205,3 +248,41 @@ for i in img:
     image.append(k)
 
 print("영화 이미지 수 : ",len(image))
+
+
+
+
+
+
+conn = pymysql.connect(
+    user='root', 
+    passwd='', 
+    host='127.0.0.1', 
+    db='movie', 
+    charset='utf8'
+)
+
+cur = conn.cursor()
+
+
+
+for i in range(0,len(title)):
+    k = [ ]
+    k.append(title[i])
+    k.append(movie_rate[i])
+    k.append(netizen_rate[i])
+    k.append(netizen_count[i])
+    k.append(journalist_score[i])
+    k.append(journalist_count[i])
+    k.append(scope[i])
+    k.append(playing_time[i])
+    k.append(opening_date[i])
+    k.append(director[i])
+    k.append(image[i])
+    sql = "INSERT INTO movie VALUES %r;" % (tuple(k),)
+    
+
+
+
+
+
