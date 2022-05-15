@@ -2,20 +2,33 @@ show databases;
 
 use movie;
 
-create table movie
+show databases;
+create database movie;
+use movie;
+
+
+
+create database movies;
+use movies;
+
+create table movies
   (
-     title varchar(30) ,
-     movie_rate varchar(20),
-     netizen_rate float (4),
-     netizen_count int (10),
-     journalist_score float(4),
-     journalist_count int(10),
-     scope varchar(30),
-     playing_time varchar(10),
-     opening_date varchar(20),
-	 director varchar(30),
-     image varchar(70)
-     );
+	 id int auto_increment primary key,	
+     title  longtext,
+     movie_rate longtext,
+     netizen_rate float,
+     netizen_count int ,
+     journalist_score float,
+     journalist_count int,
+     scope longtext,
+     playing_time longtext,
+     opening_date longtext,
+	 director longtext,
+     image longtext,
+     enter_date DATETIME DEFAULT NOW() );
+ 
+show tables;
+select * from movie;
 
    
   

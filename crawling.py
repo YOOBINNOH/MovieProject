@@ -1,3 +1,4 @@
+
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -159,6 +160,7 @@ for i in geyo:
     for j in k:
         strs += str( j.get_text()+" " )
     scope.append(strs)    
+    strs=""
 print('개요 수 : ', len(scope))  
 
 
@@ -226,7 +228,7 @@ for i in dir:
     for j in k:
         st += str( j.get_text()+" " )
     director.append(st)    
-
+    st=""
 print("감독 수 : ",(len(director)))
 
 
@@ -246,7 +248,7 @@ for i in img:
     q = (i.img)
     k = q.get('src')
     image.append(k)
-
+    k=""
 print("영화 이미지 수 : ",len(image))
 
 
@@ -254,32 +256,39 @@ print("영화 이미지 수 : ",len(image))
 
 
 
-conn = pymysql.connect(
+mydb = pymysql.connect(
     user='root', 
     passwd='', 
     host='127.0.0.1', 
-    db='movie', 
+    db='list', 
     charset='utf8'
 )
 
-cur = conn.cursor()
+mc = mydb.cursor()
+
 
 
 
 for i in range(0,len(title)):
-    k = [ ]
-    k.append(title[i])
-    k.append(movie_rate[i])
-    k.append(netizen_rate[i])
-    k.append(netizen_count[i])
-    k.append(journalist_score[i])
-    k.append(journalist_count[i])
-    k.append(scope[i])
-    k.append(playing_time[i])
-    k.append(opening_date[i])
-    k.append(director[i])
-    k.append(image[i])
-    sql = "INSERT INTO movie VALUES %r;" % (tuple(k),)
+    a=(title[i])
+    b=(movie_rate[i])
+    c=(netizen_rate[i])
+    d=(netizen_count[i])
+    e=(journalist_score[i])
+    f=(journalist_count[i])
+    g=(scope[i])
+    h=(playing_time[i])
+    j=(opening_date[i])
+    k=(director[i])
+    l=(image[i])
+    sql = "INSERT INTO list (title, movie_rate, netizen_rate, netizen_count, journalist_score, journalist_count, scope, playing_time, opening_date, director, image) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    val = (a,b,c,d,e,f,g,h,j,k,l)
+
+    mc.execute(sql, val)
+    mydb.commit()
+   
+   
+
     
 
 
