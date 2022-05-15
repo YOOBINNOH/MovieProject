@@ -48,7 +48,7 @@ print("제목 수 : ", len(title))
 
 a=soup.select_one('#content > div.article > div:nth-child(1) ')
 scopes = a.select('li > dl > dt')
-
+m = []
 for i in scopes:
     s = i.select_one('span')
     movie_rate.append(i.get_text())
@@ -63,11 +63,23 @@ for i in range(0,len(scope)):
     elif movie_rate[i][2]=='체':
         movie_rate[i]='전체 관람가'
     else:
-        movie_rate[i]='Null'                
+        movie_rate[i]='Null'   
+
+
+                
 print("등급 수 : ",len(movie_rate))
 
-
-
+for i in range(0,len(movie_rate)):
+    if movie_rate[i][2]=='5':
+        movie_rate[i]="15세 관람가"
+    elif movie_rate[i][2]=='2':
+        movie_rate[i]='12세 관람가'
+    elif movie_rate[i][2]=='소':
+        movie_rate[i]='청소년 관람 불가'
+    elif movie_rate[i][2]=='체':
+        movie_rate[i]='전체 관람가'
+    else:
+        movie_rate[i]='Null'  
 
 
 
@@ -254,38 +266,36 @@ print("영화 이미지 수 : ",len(image))
 
 
 
+# mydb = pymysql.connect(
+#     user='root', 
+#     passwd='', 
+#     host='127.0.0.1', 
+#     db='list', 
+#     charset='utf8'
+# )
 
-
-mydb = pymysql.connect(
-    user='root', 
-    passwd='', 
-    host='127.0.0.1', 
-    db='list', 
-    charset='utf8'
-)
-
-mc = mydb.cursor()
+# mc = mydb.cursor()
 
 
 
 
-for i in range(0,len(title)):
-    a=(title[i])
-    b=(movie_rate[i])
-    c=(netizen_rate[i])
-    d=(netizen_count[i])
-    e=(journalist_score[i])
-    f=(journalist_count[i])
-    g=(scope[i])
-    h=(playing_time[i])
-    j=(opening_date[i])
-    k=(director[i])
-    l=(image[i])
-    sql = "INSERT INTO list (title, movie_rate, netizen_rate, netizen_count, journalist_score, journalist_count, scope, playing_time, opening_date, director, image) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-    val = (a,b,c,d,e,f,g,h,j,k,l)
+# for i in range(0,len(title)):
+#     a=(title[i])
+#     b=(movie_rate[i])
+#     c=(netizen_rate[i])
+#     d=(netizen_count[i])
+#     e=(journalist_score[i])
+#     f=(journalist_count[i])
+#     g=(scope[i])
+#     h=(playing_time[i])
+#     j=(opening_date[i])
+#     k=(director[i])
+#     l=(image[i])
+#     sql = "INSERT INTO list (title, movie_rate, netizen_rate, netizen_count, journalist_score, journalist_count, scope, playing_time, opening_date, director, image) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+#     val = (a,b,c,d,e,f,g,h,j,k,l)
 
-    mc.execute(sql, val)
-    mydb.commit()
+#     mc.execute(sql, val)
+#     mydb.commit()
    
    
 
